@@ -4,7 +4,7 @@ const N = require('../nearley-there.js');
 const fs = require('fs');
 const parenGrammar = fs.readFileSync('./tests/paren.ne', 'utf8');
 
-test.only('filepath grammar is unparsing', (t)=>{
+test('filepath grammar is unparsing', (t)=>{
 	const paren = N.unparse('./tests/paren.ne', 10);
 	t.is(N.parse('./tests/paren.ne', paren), true);
 
