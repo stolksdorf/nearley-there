@@ -1,26 +1,22 @@
 const test = require('ava');
 const N = require('../nearley-there.js');
 
+const fs = require('fs');
+const parenGrammar = fs.readFileSync('./tests/paren.ne', 'utf8');
 
 
-test.skip('compile is working', (t)=>{
-	const res = N.compile('./tests/csscolor.ne', './thing.js');
-
-	console.log(res);
-	t.pass();
+test('compile to string', (t)=>{
+	const res = N.compile(parenGrammar);
+	t.is(typeof res, 'string');
 });
 
+test('compiled code works', (t)=>{
+	N.compile('./tests/calculator.ne', './tests/calculator.gen.js');
+	const calculator = require('./calculator.gen.js');
+	t.is(calculator('3+7'), 10);
+});
 
-
-
-
-test('compiled code is working', (t)=>{
-	const thing = require('../thing.js');
-
-	const res = thing('#363');
-
-	console.log(res);
-
-	t.pass();
-})
-
+test('bad grammar throws', (t)=>{
+	const error = t.throws(()=>N.compile('yoyoyoy'), TypeError);
+	t.is(error.message, 'Cannot read property \'length\' of undefined')
+});

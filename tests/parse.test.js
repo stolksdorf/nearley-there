@@ -9,6 +9,7 @@ test('fielpath grammar is parsing', (t)=>{
 		N.parse('./tests/csscolor.ne', '#333'),
 		[ '#', [ '3' ], [ '3' ], [ '3' ] ]
 	);
+	t.is(N.parse('./tests/calculator.ne', '1+4'), 5);
 });
 
 test('string-based grammar is parsing', (t)=>{

@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "ava -s",
+    "test": "ava -s -v",
     "test:dev": "ava -s -w"
   },
   "repository": {
@@ -21,7 +21,10 @@
     "parsing"
   ],
   "ava": {
-    "source": ["**/*.{js,ne}"]
+    "source": [
+      "**/*.{js,ne}",
+      "!tests/*.gen.js"
+    ]
   },
   "author": "stolksdorf",
   "license": "MIT",
