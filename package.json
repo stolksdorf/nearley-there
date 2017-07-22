@@ -1,0 +1,36 @@
+{
+  "name": "nearley-there",
+  "version": "1.0.0",
+  "description": "A nicer programmatic interface for Nearley.js",
+  "main": "nearley-there.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "ava -s",
+    "test:dev": "ava -s -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stolksdorf/nearley-there.git"
+  },
+  "keywords": [
+    "nearley",
+    "parser",
+    "parse",
+    "parsing"
+  ],
+  "ava": {
+    "source": ["**/*.{js,ne}"]
+  },
+  "author": "stolksdorf",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stolksdorf/nearley-there/issues"
+  },
+  "homepage": "https://github.com/stolksdorf/nearley-there#readme",
+  "devDependencies": {
+    "ava": "^0.21.0",
+    "nearley": "^2.10.2"
+  }
+}
