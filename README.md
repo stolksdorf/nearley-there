@@ -21,7 +21,7 @@ const fs = require('fs');
 const colorGrammar = fs.readFileSync('./csscolor.ne', 'utf8');
 
 //N.parse takes a grammar string and target
-const colors = N.parse(colorGrammar, '#333');
+const color = N.parse(colorGrammar, '#333');
 
 //If can also take file paths to grammars
 const four = N.parse('./calculator.ne', '1+3');
@@ -38,18 +38,56 @@ N.compile(colorGrammar, './color.js');
 
 ### api
 
+#### `.compile(grammar|path, [filepath])`
+Takes a grammar or a path to a grammar, compiles it, and returns the compiled parser as a string. If a `filepath` is provided it will write the result to a new file there.
+
+```javascript
+const compiled = N.compile('./calculator.ne');
+fs.writeFileSync('./calculator.js', compiled);
+
+N.compile(colorGrammar, './color.js');
+const ColorParser = require('./color.js');
+const color = ColorParser('#345');
+```
+
 #### `.parse(grammar|path, target)`
 Takes a grammar or a path to a grammar, compiles it, then parses the `target` through the compiled grammar and returns the result. This function will *not* throw errors if the target does not match the grammar, it will instead just return the parsing errors. It will throw errors if the grammar is invalid.
 
 *Warning:* Uses `eval()`. Don't use this other than for testing.
 
+```javascript
+const color = N.parse(colorGrammar, '#333');
 
-#### `.compile(grammar|path, [filepath])`
-Takes a grammar or a path to a grammar, compiles it, and returns the compiled result. If a `filepath` is provided it will write the result to a new file there.
+const four = N.parse('./calculator.ne', '1+3');
+```
+
+#### `.unparse(grammar|path, [depth=5])`
+Nearley also has the ability to do [unparsing](https://github.com/Hardmath123/nearley#the-unparser), where it can take a grammar and produce random strings that conform to that grammar.
+
+`.unparse()` takes a grammar or a path to a grammar, compiles it, the runs an unparser on it executing to the depth. This function may throw an error if the depth provided is too shallow ofr it to generate any results.
+
+```javascript
+const randomColor = N.unparse(colorGrammar, 10);
+
+//randomColor -> '#3471a3';
+```
 
 
-### compiled grammars
-Compiled grammars are ready-to-use js files that can be required and used as a parsing function. This is what is used to produce a compiled grammar.
+#### `.generator(grammar|path, [filepath])`
+Takes a grammar or a path to a grammar, compiles it, integrates in the unparser and returns the generator as a string. If a `filepath` is provided it will write the result to a new file there.
+
+```javascript
+N.generator('./color.ne', './color.rand.js');
+
+const RandColor = require('./color.rand.js');
+const randomColor = RandColor(7);
+
+//randomColor -> '#3471a3';
+```
+
+
+### compiled parsers
+Compiled parsers are ready-to-use js files that can be required and used as a parsing function. This is what is used to produce a compiled parser.
 
 ```javascript
 const Nearley = require('nearley');
@@ -74,7 +112,6 @@ const N = require('nearley-there');
 N.compile('./calculator.ne', './calculator.js');
 
 //After build
-
 const Calculator = require('./calculator.js');
 
 Calculator('1+4') // -> 5

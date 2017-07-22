@@ -11,8 +11,8 @@ test('compile to string', (t)=>{
 });
 
 test('compiled code works', (t)=>{
-	N.compile('./tests/calculator.ne', './tests/calculator.gen.js');
-	const calculator = require('./calculator.gen.js');
+	N.compile('./tests/calculator.ne', './tests/calculator.built.js');
+	const calculator = require('./calculator.built.js');
 	t.is(calculator('3+7'), 10);
 });
 

@@ -23,7 +23,7 @@
   "ava": {
     "source": [
       "**/*.{js,ne}",
-      "!tests/*.gen.js"
+      "!tests/*.built.js"
     ]
   },
   "author": "stolksdorf",

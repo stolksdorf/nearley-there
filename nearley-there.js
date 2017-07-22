@@ -3,6 +3,7 @@ const fs = require('fs');
 const Nearley = require('nearley/lib/nearley.js');
 const Compile = require('nearley/lib/compile.js');
 const Generate = require('nearley/lib/generate.js');
+const Unparse = require('./nearley.unparse.js');
 const nearleyGrammar = require('nearley/lib/nearley-language-bootstrapped.js');
 
 
@@ -36,25 +37,40 @@ const compileGrammar = (grammar)=>{
 ${compiled}
 /** End **/
 
-const CompiledGrammar = new Nearley.Parser(grammar.ParserRules,grammar.ParserStart).grammar;
-
-module.exports = (input)=>{
-	return (new Nearley.Parser(CompiledGrammar))
-		.feed(input)
-		.results[0];
-};`;
-}
+const CompiledParser = new Nearley.Parser(grammar.ParserRules,grammar.ParserStart).grammar;
+`;
+};
 
 
 const NearleyThere = {
-	parse : (grammar, target)=>{
-		grammar = resolvePath(grammar);
-		return eval(`
-${compileGrammar(grammar)}
-try{module.exports("${target}")}catch(err){err;}`);
+	compile : (grammar, destination=false)=>{
+		const result = `${compileGrammar(resolvePath(grammar))}
+module.exports = (input)=>(new Nearley.Parser(CompiledParser)).feed(input).results[0];`;
+		if(destination) fs.writeFileSync(destination, result);
+		return result;
 	},
-	compile : (grammar, destination = false)=>{
-		const result = compileGrammar(resolvePath(grammar));
+	parse : (grammar, target)=>{
+		const compiledParser = eval(`${compileGrammar(resolvePath(grammar))} CompiledParser;`);
+		try{
+			return (new Nearley.Parser(compiledParser))
+				.feed(target)
+				.results[0];
+		}catch(err){
+			return err;
+		}
+	},
+	unparse : (grammar, depth=5)=>{
+		const CompiledGrammar = eval(`${compileGrammar(resolvePath(grammar))} grammar;`);
+		try{
+			return Unparse(CompiledGrammar, false, depth);
+		}catch(err){
+			return err;
+		}
+	},
+	generator : (grammar, destination=false)=>{
+		const unparse = fs.readFileSync('./nearley.unparse.js', 'utf8').split('\n');
+		unparse[unparse.length-1] = `module.exports=(depth)=>unparse(grammar, false, depth);`;
+		const result = `${compileGrammar(resolvePath(grammar))} \n ${unparse.join('\n')}`;
 		if(destination) fs.writeFileSync(destination, result);
 		return result;
 	}
