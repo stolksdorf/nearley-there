@@ -1,5 +1,7 @@
 # nearley-there
 
+[![npm version](https://badge.fury.io/js/nearley-there.svg)](https://badge.fury.io/js/nearley-there)
+
 [Nearley.js](http://nearley.js.org/) is a fantastic parser toolkit for Javascript. However I've found it's programmatic interface a bit lacking. `nearley-there` fills in the gaps and make it easy to programmtically test and compile Nearley grammars into functional code.
 
 **Note:** `nearley-there` is a development tool and you should compile your grammars and not use this lib for production.
